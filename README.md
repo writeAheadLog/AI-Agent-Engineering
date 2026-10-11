@@ -32,17 +32,20 @@ uv sync
 source .venv/bin/activate
 cp .env.example .env          # 이후 .env의 '로컬 모델' 블록 주석 해제 (5단계)
 
-# 3) 로컬 LLM 서버 — 별도 터미널에서 실행하고 계속 켜 둡니다
-scripts/start_local_llm.sh    # 첫 실행 시 모델 다운로드(약 17.6GB)로 수 분~수십 분 소요
+# 3) 모델 다운로드 — Hugging Face에서 직접 받습니다 (Ollama/LM Studio 불필요)
+scripts/start_local_llm.sh --download    # LLM(약 17.6GB) + 임베딩(약 2.3GB). 수 분~수십 분 소요
 
-# 4) 관측 스택 — 8~9장에 필요
+# 4) 로컬 LLM 서버 — 별도 터미널에서 실행하고 계속 켜 둡니다
+scripts/start_local_llm.sh
+
+# 5) 관측 스택 — 8~9장에 필요
 (cd src/common/observability && docker compose up -d)
 
-# 5) 동작 확인
+# 6) 동작 확인
 python ch04/calculator_tool_use.py
 ```
 
-컴퓨터를 재시작하면 3)의 LLM 서버와 Docker Desktop을 다시 켜야 합니다. LLM 서버가 꺼져 있으면 예제가 시작할 때 `LocalLLMServerUnavailable` 오류와 함께 해결 방법을 안내합니다.
+컴퓨터를 재시작하면 4)의 LLM 서버와 Docker Desktop을 다시 켜야 합니다. LLM 서버가 꺼져 있으면 예제가 시작할 때 `LocalLLMServerUnavailable` 오류와 함께 해결 방법을 안내합니다.
 
 ## 환경 설정
 
@@ -103,11 +106,17 @@ Hugging Face에서 받은 GGUF 모델을 [llama.cpp](https://github.com/ggml-org
 # llama.cpp 설치 (MacOS). Linux는 llama.cpp 릴리스 바이너리를 사용하세요.
 brew install llama.cpp
 
-# LLM 서버 실행. 첫 실행 시 Hugging Face에서 모델을 내려받습니다 (~/.cache/huggingface).
+# 모델 미리 받기 (선택). 받지 않으면 서버 첫 실행 때 LLM을, 예제 첫 실행 때 임베딩을 받습니다.
+# 모두 ~/.cache/huggingface에 저장되며 서버와 예제가 같은 캐시를 사용합니다.
+scripts/start_local_llm.sh --download           # Qwen3.8-27B + bge-m3 + all-MiniLM-L6-v2
+scripts/start_local_llm.sh --download gpt-oss   # gpt-oss-20b + 임베딩
+
+# LLM 서버 실행
 scripts/start_local_llm.sh           # Qwen3.8-27B (기본, 약 17.6GB, 한국어 응답 품질 우수)
 scripts/start_local_llm.sh gpt-oss   # gpt-oss-20b (약 12GB, 더 빠름)
 
 # 그 밖의 Hugging Face GGUF 모델: <저장소>[:양자화] [파일.gguf] [llama-server 추가 인자...]
+scripts/start_local_llm.sh --download unsloth/gemma-4-26b-a4b-it-GGUF:Q4_K_M
 scripts/start_local_llm.sh unsloth/gemma-4-26b-a4b-it-GGUF:Q4_K_M
 scripts/start_local_llm.sh --help
 ```
