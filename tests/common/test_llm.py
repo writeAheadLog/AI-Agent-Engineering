@@ -6,7 +6,7 @@ from src.common.llm import get_chat_model, get_embeddings, resolve_model
 @pytest.fixture(autouse=True)
 def _clean_env(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
-    for var in ("LLM_MODEL", "LLM_REASONING_EFFORT", "EMBEDDING_MODEL"):
+    for var in ("LLM_MODEL", "LLM_REASONING_EFFORT", "EMBEDDING_MODEL", "EMBEDDING_PROVIDER"):
         monkeypatch.delenv(var, raising=False)
 
 
@@ -37,3 +37,11 @@ def test_embeddings_model_is_configurable(monkeypatch):
     monkeypatch.setenv("EMBEDDING_MODEL", "text-embedding-nomic-embed-text-v1.5")
     assert get_embeddings().model == "text-embedding-nomic-embed-text-v1.5"
 
+
+def test_huggingface_embeddings_run_locally(monkeypatch):
+    monkeypatch.setenv("EMBEDDING_PROVIDER", "huggingface")
+    monkeypatch.setenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
+    embeddings = get_embeddings()
+    near, far = embeddings.embed_documents(["low inventory", "weather is nice"])
+    query = embeddings.embed_query("stock shortage")
+    assert sum(q * n for q, n in zip(query, near)) > sum(q * f for q, f in zip(query, far))

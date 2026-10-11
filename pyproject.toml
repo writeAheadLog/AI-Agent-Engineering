@@ -26,6 +26,7 @@ dependencies = [
     "vectordb2>=0.1.9",
     "tensorflow-hub>=0.16.1",
     "backoff>=2.2.1",
+    "langchain-huggingface<1.2",
 ]
 
 [project.optional-dependencies]
