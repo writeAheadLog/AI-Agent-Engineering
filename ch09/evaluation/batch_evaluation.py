@@ -172,28 +172,21 @@ def evaluate_single_instance(raw: str, graph) -> Optional[Dict[str, float]]:
                 routing_pred = msg.content.strip().lower()
                 break
 
+        # langchain-openai 1.x exposes tool calls only on AIMessage.tool_calls, not additional_kwargs.
         final_reply = ""
         for msg in reversed(result["messages"]):
-            if isinstance(msg, AIMessage):
-                calls = msg.additional_kwargs.get("tool_calls", [])
-                if not calls:
-                    final_reply = msg.content or ""
-                    break
+            if isinstance(msg, AIMessage) and not msg.tool_calls:
+                final_reply = msg.content or ""
+                break
 
         pred_tool_names: List[str] = []
         pred_call_objs: List[dict] = []
         for m in result["messages"]:
             if not isinstance(m, AIMessage):
                 continue
-            for tc in m.additional_kwargs.get("tool_calls", []):
-                if "function" in tc:
-                    name = tc["function"]["name"]
-                    params = json.loads(tc["function"]["arguments"])
-                else:
-                    name = tc.get("name")
-                    params = tc.get("args", {})
-                pred_tool_names.append(name)
-                pred_call_objs.append({"tool": name, "params": params})
+            for tc in m.tool_calls:
+                pred_tool_names.append(tc["name"])
+                pred_call_objs.append({"tool": tc["name"], "params": tc["args"]})
 
         expected_routing = ex.get("expected_routing", "").lower()
         routing_acc = 1.0 if routing_pred == expected_routing else 0.0
