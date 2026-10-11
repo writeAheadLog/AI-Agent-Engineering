@@ -9,13 +9,13 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
 2.  각 예제 스크립트를 실행합니다.
 
 ```bash
 # 단기 기억(Checkpointer) 예제
-python short_term_memory.py
+python ch06/short_term_memory.py
 
 # BM25 검색 예제
-python basic_bm25.py
+python ch06/basic_bm25.py
 ```

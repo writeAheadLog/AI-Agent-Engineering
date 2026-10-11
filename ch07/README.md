@@ -48,23 +48,13 @@ python ch07/test_rlvr_model.py --model-path ch07/fine_tuned_model/qwen-helpdesk-
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
 2.  각 예제 스크립트를 실행합니다. (파인튜닝 관련 스크립트는 GPU 자원 및 데이터셋 준비가 필요할 수 있습니다.)
 
 ```bash
 # Reflexion 예제
-python reflexion.py
+python ch07/reflexion.py
 
 # 경험적 학습 예제
-python experiential_learning.py
+python ch07/experiential_learning.py
 ```
-
-
-
-
-
-
-
-
-
-

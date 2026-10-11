@@ -8,19 +8,9 @@
 
 ## 실행 방법
 
-1.  필요한 라이브러리(`llm-guard`)가 설치되어 있어야 합니다.
+1.  `llm-guard`는 기본 의존성에 없으므로 먼저 설치합니다: `uv pip install llm-guard`
 2.  스크립트 실행:
 
 ```bash
-python prompt_injection_block.py
+python ch12/prompt_injection_block.py
 ```
-
-
-
-
-
-
-
-
-
-

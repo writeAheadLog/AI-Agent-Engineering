@@ -13,20 +13,28 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
-2.  Loki, Ray, Temporal 등 추가적인 인프라가 필요한 예제는 해당 서비스를 먼저 실행해야 합니다.
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
+2.  이 장의 에이전트는 실행 로그를 Loki로 보내므로, [루트 README](../README.md)의 6단계(관측 가능성 스택)를 먼저 실행합니다.
+    Ray, Temporal, Redis 예제는 각 패키지와 서버를 별도로 설치·실행해야 합니다.
+    *   Ray: `uv pip install ray` (서버 불필요, 로컬 클러스터 자동 실행)
+    *   Redis: `docker run -d --name agent-redis -p 6379:6379 redis:7`, `uv pip install "redis<8"`
+        (redis-py 8은 소켓 타임아웃 기본값이 5초라 예제의 `xread(block=5000)`과 충돌해 소비자 스레드가 종료됩니다.
+        스트림에 이전 실행의 작업이 남아 있으면 먼저 처리하므로 재실행 전 `docker exec agent-redis redis-cli FLUSHALL`을 권장합니다.
+        로컬 모델은 응답이 느려 90초 대기 시간을 넘길 수 있습니다.)
+    *   Temporal: `brew install temporal`, `temporal server start-dev`, `uv pip install temporalio`
+        (워커가 로컬 Temporal 서버 `localhost:7233`에 접속합니다.)
 3.  기본 에이전트 실행:
 
 ```bash
-python supply_chain_logistics_agent.py
+python ch08/supply_chain_logistics_agent.py
 ```
 
 4.  Ray 기반 멀티 에이전트 실행 (Ray 설치 필요):
 ```bash
-python ray_supply_chain_multi_agent.py
+python ch08/ray_supply_chain_multi_agent.py
 ```
 
 5.  Temporal 기반 실행 (Temporal 서버 실행 필요):
 ```bash
-python temporal_supply_chain_multi_agent.py
+python ch08/temporal_supply_chain_multi_agent.py
 ```

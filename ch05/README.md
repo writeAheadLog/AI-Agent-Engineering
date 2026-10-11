@@ -11,19 +11,19 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
 2.  각 예제 스크립트를 실행합니다.
 
 ```bash
 # 기본 스킬 선택 예제
-python basic_skill_selection.py
+python ch05/basic_skill_selection.py
 
 # 의미론적 스킬 선택 예제
-python semantic_skill_selection.py
+python ch05/semantic_skill_selection.py
 
 # 계층적 스킬 선택 예제
-python hierarchical_skill_selection.py
+python ch05/hierarchical_skill_selection.py
 
 # LangGraph 에이전트 예제
-python langgraph_example.py
+python ch05/langgraph_example.py
 ```

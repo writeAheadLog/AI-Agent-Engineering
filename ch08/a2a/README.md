@@ -9,7 +9,7 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  [루트 README](../../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
 2.  두 개의 터미널을 엽니다.
 
 ### 터미널 1: 에이전트 서버 실행
@@ -17,7 +17,7 @@
 서버를 먼저 실행하여 요청을 받을 준비를 합니다.
 
 ```bash
-python agent_server.py
+python ch08/a2a/agent_server.py
 ```
 서버는 `http://localhost:8000`에서 실행됩니다.
 
@@ -26,17 +26,7 @@ python agent_server.py
 클라이언트를 실행하여 서버에 작업을 요청합니다.
 
 ```bash
-python agent_client.py
+python ch08/a2a/agent_client.py
 ```
 
 성공적으로 실행되면, 클라이언트는 서버를 발견하고("핸드셰이크 성공"), 텍스트 요약 요청을 보낸 후 결과를 출력합니다.
-
-
-
-
-
-
-
-
-
-

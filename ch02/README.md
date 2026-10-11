@@ -9,23 +9,13 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
 2.  다음 명령어로 에이전트를 실행하거나 평가할 수 있습니다.
 
 ```bash
 # 에이전트 실행
-python simple_customer_support_agent.py
+python ch02/simple_customer_support_agent.py
 
 # 에이전트 평가
-python customer_support_agent_evaluation.py
+python ch02/customer_support_agent_evaluation.py
 ```
-
-
-
-
-
-
-
-
-
-

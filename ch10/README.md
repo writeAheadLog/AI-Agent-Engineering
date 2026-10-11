@@ -9,15 +9,5 @@
 ## 실행 방법
 
 ```bash
-python distribution_shifts.py
+python ch10/distribution_shifts.py
 ```
-
-
-
-
-
-
-
-
-
-

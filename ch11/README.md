@@ -10,25 +10,15 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
-2.  SOC 에이전트 실행:
+1.  [루트 README](../README.md)의 환경 설정 4~5단계에 따라 `.env`를 설정합니다 (OpenAI API 또는 로컬 모델).
+2.  SOC 에이전트 실행 (이 장의 스크립트는 `.env`를 직접 읽지 않으므로 `--env-file`로 전달합니다):
 
 ```bash
-python soc_analyst_agent.py
+uv run --env-file .env python ch11/soc_analyst_agent.py
 ```
 
-3.  DSPy 최적화 예제 실행:
+3.  DSPy 최적화 예제 실행 (`dspy`는 기본 의존성에 없으므로 `uv pip install "dspy[optuna]"`로 먼저 설치합니다. `optimize_soc_react_agent.py`의 MIPROv2는 `optuna`가 필요합니다):
 ```bash
-python optimize_soc_react_agent.py
-python optimize_threat_classifier.py
+uv run --env-file .env python ch11/optimize_soc_react_agent.py
+uv run --env-file .env python ch11/optimize_threat_classifier.py
 ```
-
-
-
-
-
-
-
-
-
-

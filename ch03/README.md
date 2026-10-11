@@ -9,11 +9,11 @@
 
 ## 실행 방법
 
-1.  프로젝트 루트에 `.env` 파일을 생성하고 `OPENAI_API_KEY`를 설정합니다.
+1.  프로젝트 루트의 `.env`에 `OPENAI_API_KEY`를 설정합니다. 이 장은 OpenAI Realtime API 전용이라 로컬 모델로 대체할 수 없으므로, 로컬 모드용 `.env`(`OPENAI_API_KEY=local`)로는 실행되지 않습니다.
 2.  다음 명령어로 서버를 실행합니다.
 
 ```bash
-python realtime_voice_agent.py
+python ch03/realtime_voice_agent.py
 ```
 (또는 `uvicorn realtime_voice_agent:app --host 0.0.0.0 --port 5050`)
 
