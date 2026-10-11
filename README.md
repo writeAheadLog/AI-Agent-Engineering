@@ -106,7 +106,13 @@ brew install llama.cpp
 # LLM 서버 실행. 첫 실행 시 Hugging Face에서 모델을 내려받습니다 (~/.cache/huggingface).
 scripts/start_local_llm.sh           # Qwen3.8-27B (기본, 약 17.6GB, 한국어 응답 품질 우수)
 scripts/start_local_llm.sh gpt-oss   # gpt-oss-20b (약 12GB, 더 빠름)
+
+# 그 밖의 Hugging Face GGUF 모델: <저장소>[:양자화] [파일.gguf] [llama-server 추가 인자...]
+scripts/start_local_llm.sh unsloth/gemma-4-26b-a4b-it-GGUF:Q4_K_M
+scripts/start_local_llm.sh --help
 ```
+
+포트와 컨텍스트 길이는 `LLM_PORT`(기본 1234), `LLM_CTX`(기본 32768) 환경 변수로 바꿀 수 있습니다. 포트를 바꾸면 `.env`의 `OPENAI_BASE_URL`도 함께 바꾸세요.
 
 `.env`에서 '로컬 모델' 블록의 주석을 해제하고, 위쪽의 `OPENAI_API_KEY=...` 줄은 지웁니다.
 
