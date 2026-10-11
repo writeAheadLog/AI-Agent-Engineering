@@ -1,12 +1,14 @@
+import socket
+
 import pytest
 
-from src.common.llm import get_chat_model, get_embeddings, resolve_model
+from src.common.llm import LocalLLMServerUnavailable, get_chat_model, get_embeddings, resolve_model
 
 
 @pytest.fixture(autouse=True)
 def _clean_env(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-key")
-    for var in ("LLM_MODEL", "LLM_REASONING_EFFORT", "EMBEDDING_MODEL", "EMBEDDING_PROVIDER"):
+    for var in ("LLM_MODEL", "LLM_REASONING_EFFORT", "EMBEDDING_MODEL", "EMBEDDING_PROVIDER", "OPENAI_BASE_URL"):
         monkeypatch.delenv(var, raising=False)
 
 
@@ -45,3 +47,29 @@ def test_huggingface_embeddings_run_locally(monkeypatch):
     near, far = embeddings.embed_documents(["low inventory", "weather is nice"])
     query = embeddings.embed_query("stock shortage")
     assert sum(q * n for q, n in zip(query, near)) > sum(q * f for q, f in zip(query, far))
+
+
+@pytest.fixture
+def free_port():
+    with socket.socket() as s:
+        s.bind(("127.0.0.1", 0))
+        return s.getsockname()[1]
+
+
+def test_missing_local_server_fails_fast_with_setup_guidance(monkeypatch, free_port):
+    monkeypatch.setenv("OPENAI_BASE_URL", f"http://localhost:{free_port}/v1")
+    with pytest.raises(LocalLLMServerUnavailable, match="scripts/start_local_llm.sh"):
+        resolve_model("gpt-4o")
+
+
+def test_running_local_server_passes_check(monkeypatch):
+    with socket.socket() as server:
+        server.bind(("127.0.0.1", 0))
+        server.listen()
+        monkeypatch.setenv("OPENAI_BASE_URL", f"http://127.0.0.1:{server.getsockname()[1]}/v1")
+        assert resolve_model("gpt-4o") == "gpt-4o"
+
+
+def test_remote_base_url_is_not_probed(monkeypatch):
+    monkeypatch.setenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+    assert resolve_model("gpt-4o") == "gpt-4o"

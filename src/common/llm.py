@@ -5,15 +5,43 @@ unchanged unless LLM_MODEL / EMBEDDING_MODEL / EMBEDDING_PROVIDER are set (e.g. 
 local OpenAI-compatible server via OPENAI_BASE_URL).
 """
 import os
+import socket
+from urllib.parse import urlparse
 
 from langchain_core.embeddings import Embeddings
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 DEFAULT_EMBEDDING_MODEL = "text-embedding-ada-002"
 DEFAULT_HF_EMBEDDING_MODEL = "BAAI/bge-m3"
+LOCAL_HOSTS = {"localhost", "127.0.0.1", "0.0.0.0", "::1"}
+
+
+class LocalLLMServerUnavailable(RuntimeError):
+    pass
+
+
+def _ensure_local_server_reachable(base_url: str) -> None:
+    # Fail at model creation with setup guidance instead of a bare "Connection refused"
+    # on the first LLM call. A raw socket keeps this usable inside Temporal's sandbox,
+    # which restricts urllib.request.
+    url = urlparse(base_url)
+    if url.hostname not in LOCAL_HOSTS:
+        return
+    try:
+        socket.create_connection((url.hostname, url.port or 80), timeout=2).close()
+    except OSError as e:
+        raise LocalLLMServerUnavailable(
+            f"로컬 LLM 서버({base_url})에 연결할 수 없습니다.\n"
+            "  - 로컬 모델 사용: 다른 터미널에서 scripts/start_local_llm.sh 를 실행하세요.\n"
+            "  - OpenAI API 사용: .env에서 OPENAI_BASE_URL을 지우고 OPENAI_API_KEY를 설정하세요.\n"
+            "  자세한 내용은 README.md의 '환경 설정' 5단계를 참고하세요."
+        ) from e
 
 
 def resolve_model(default: str) -> str:
+    base_url = os.getenv("OPENAI_BASE_URL")
+    if base_url:
+        _ensure_local_server_reachable(base_url)
     return os.getenv("LLM_MODEL") or default
 
 
