@@ -14,7 +14,6 @@ import time
 from typing import Annotated, Sequence, TypedDict, Optional, Dict
 
 import ray
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.messages.tool import ToolMessage
 from langchain_core.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -27,6 +26,7 @@ from src.common.observability.loki_logger import log_to_loki
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -165,7 +165,7 @@ def handle_compliance(compliance_type: Optional[str] = None, **kwargs) -> str:
 SUPPLIER_TOOLS = [evaluate_suppliers, handle_compliance, send_logistics_response]
 
 # 메인 프로세스용 LLM (슈퍼바이저용)
-llm = init_chat_model(model="gpt-5-mini", callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
+llm = get_chat_model("gpt-5-mini", callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
 
 class AgentState(TypedDict):
     operation: Optional[dict]  # 공급망 운영 정보
@@ -185,7 +185,7 @@ class SpecialistActor:
     def __init__(self, name: str, tools_key: str, system_prompt: str):
         self.name = name
         # 액터 내부에서 LLM 초기화 (직렬화 문제 회피)
-        base_llm = init_chat_model(model="gpt-5-mini", verbose=True)
+        base_llm = get_chat_model("gpt-5-mini", verbose=True)
         tools = TOOLS_MAP[tools_key]
         self.llm = base_llm.bind_tools(tools)
         self.tools = {t.name: t for t in tools}

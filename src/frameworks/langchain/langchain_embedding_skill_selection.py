@@ -5,11 +5,11 @@ import requests
 import logging
 
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_community.tools import WikipediaQueryRun  # Not used in this script
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from langchain.vectorstores import FAISS
 import faiss
+from src.common.llm import get_chat_model, get_embeddings
 
 # -------------------------------
 # 1. Setup and Configuration
@@ -30,7 +30,7 @@ if not all([OPENAI_API_KEY, WOLFRAM_ALPHA_APP_ID, ZAPIER_WEBHOOK_URL, SLACK_BOT_
     exit(1)
 
 # Initialize OpenAI Embeddings
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+embeddings = get_embeddings()
 
 # -------------------------------
 # 2. Define Tools
@@ -186,7 +186,7 @@ def select_tool(query: str, top_k: int = 1) -> list:
 # -------------------------------
 
 # Initialize the LLM with GPT-4 and set temperature to 0 for deterministic responses
-llm = ChatOpenAI(model_name="gpt-4", temperature=0)
+llm = get_chat_model("gpt-4", temperature=0)
 
 # -------------------------------
 # 7. Handle User Interaction

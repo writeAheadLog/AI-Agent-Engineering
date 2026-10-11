@@ -17,13 +17,14 @@ def calculator(a: int, b: int, operator: Annotated[Operator, "operator"]) -> int
    
 import os
 from autogen import ConversableAgent
+from src.common.llm import resolve_model
 
 # We define the assistant agent
 assistant = ConversableAgent(
    name="ReliableCalculatorAssistant",
    system_message="You are a helpful AI assistant that can help with simple calculations. "
    "Return 'TERMINATE' when the task is done.",
-   llm_config={"config_list": [{"model": "gpt-4", "api_key": os.environ["OPENAI_API_KEY"]}]},
+   llm_config={"config_list": [{"model": resolve_model("gpt-4"), "api_key": os.environ["OPENAI_API_KEY"]}]},
 )
 
 # We define a user proxy agent to interacting with the assistant agent and execute skills.

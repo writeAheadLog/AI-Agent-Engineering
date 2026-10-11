@@ -24,6 +24,7 @@ from langgraph.graph import StateGraph, END
 
 from traceloop.sdk import Traceloop
 from src.common.observability.loki_logger import log_to_loki
+from src.common.llm import get_chat_model
 
 os.environ["OTEL_EXPORTER_OTLP_ENDPOINT"] = "http://localhost:4317"
 os.environ["OTEL_EXPORTER_OTLP_INSECURE"] = "true"
@@ -157,7 +158,7 @@ def handle_compliance(compliance_type: str = None, **kwargs) -> str:
 SUPPLIER_TOOLS = [evaluate_suppliers, handle_compliance, send_logistics_response]
 
 Traceloop.init(disable_batch=True, app_name="supply_chain_logistics_agent_redis")
-llm = ChatOpenAI(model="gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
+llm = get_chat_model("gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
 
 # Bind tools to specialized LLMs
 inventory_llm = llm.bind_tools(INVENTORY_TOOLS)

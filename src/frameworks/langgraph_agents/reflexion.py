@@ -1,10 +1,10 @@
 from typing import Annotated
 from typing_extensions import TypedDict
-from langchain_openai import ChatOpenAI
 from langgraph.graph import StateGraph, MessagesState, START
 from langchain_core.messages import HumanMessage
+from src.common.llm import get_chat_model
 
-llm = ChatOpenAI(model="gpt-4o")
+llm = get_chat_model("gpt-4o")
 
 reflections = []
 

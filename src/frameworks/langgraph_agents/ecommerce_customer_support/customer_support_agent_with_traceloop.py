@@ -19,6 +19,7 @@ from langgraph.graph import StateGraph, END
 
 from traceloop.sdk import Traceloop
 from traceloop.sdk.decorators import workflow
+from src.common.llm import get_chat_model
 
 @workflow(name='send_customer_message')
 @tool
@@ -51,7 +52,7 @@ def modify_order(order_id: str, shipping_address: dict) -> str:
 TOOLS = [send_customer_message, issue_refund, cancel_order, modify_order]
 
 Traceloop.init(disable_batch=True)
-llm = ChatOpenAI(model="gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()],  
+llm = get_chat_model("gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()],  
     verbose=True).bind_tools(TOOLS)
 
 class AgentState(TypedDict):

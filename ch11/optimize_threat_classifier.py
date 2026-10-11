@@ -1,5 +1,7 @@
+import os
 import dspy
-dspy.configure(lm=dspy.LM("gpt-5-mini"))
+from src.common.llm import resolve_model
+dspy.configure(lm=dspy.LM(f"openai/{resolve_model('gpt-5-mini')}", api_base=os.getenv("OPENAI_BASE_URL")))
 
 # 위협 분류 작업을 위한 DSPy 시그니처 정의
 class ThreatClassifier(dspy.Signature):

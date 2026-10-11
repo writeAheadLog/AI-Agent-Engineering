@@ -1,12 +1,12 @@
 from typing import Annotated
 from typing_extensions import TypedDict
 
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import SystemMessage
 from langgraph.graph import StateGraph, MessagesState, START
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -20,7 +20,7 @@ if not os.getenv("OPENAI_API_KEY"):
     )
 
 # LLM 초기화
-llm = init_chat_model(model="gpt-5-mini", temperature=0)
+llm = get_chat_model("gpt-5-mini", temperature=0)
 
 def call_model(state: MessagesState):
     context = "\n\n".join([r.get("text", "") for r in results])

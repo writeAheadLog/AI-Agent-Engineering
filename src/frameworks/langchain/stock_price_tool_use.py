@@ -1,9 +1,9 @@
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain_core.messages import HumanMessage
 import requests
+from src.common.llm import get_chat_model
 
 @tool
 def get_stock_price(ticker: str) -> float:
@@ -18,7 +18,7 @@ def get_stock_price(ticker: str) -> float:
 
 
 # Initialize the LLM with GPT-4o and bind the tools
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+llm = get_chat_model("gpt-4o", temperature=0)
 llm_with_tools = llm.bind_tools([get_stock_price])
 
 messages = [HumanMessage("What is the stock price of Apple?")]

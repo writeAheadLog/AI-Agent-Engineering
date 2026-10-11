@@ -3,11 +3,11 @@ import requests
 import logging
 import numpy as np
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
+from src.common.llm import get_chat_model
 
 # Initialize the LLM
-llm = ChatOpenAI(model_name="gpt-4", temperature=0)
+llm = get_chat_model("gpt-4", temperature=0)
 
 # Define tool groups with descriptions
 tool_groups = {

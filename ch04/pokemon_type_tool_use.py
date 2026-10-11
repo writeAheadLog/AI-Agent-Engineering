@@ -1,10 +1,10 @@
 from langchain_core.tools import tool
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage
 import requests
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -34,7 +34,7 @@ def get_pokemon_type(pokemon: str) -> str:
 
 
 # LLM 초기화 및 도구 바인딩
-llm = init_chat_model(model="gpt-5-mini", temperature=0)
+llm = get_chat_model("gpt-5-mini", temperature=0)
 llm_with_tools = llm.bind_tools([get_pokemon_type])
 
 messages = [HumanMessage("피카츄의 타입은 무엇인가요?")]

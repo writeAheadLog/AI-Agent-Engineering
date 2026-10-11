@@ -1,5 +1,7 @@
+import os
 import dspy
-dspy.configure(lm=dspy.LM("gpt-5-mini"))
+from src.common.llm import resolve_model
+dspy.configure(lm=dspy.LM(f"openai/{resolve_model('gpt-5-mini')}", api_base=os.getenv("OPENAI_BASE_URL")))
 
 def lookup_threat_intel(indicator: str) -> str:
     """모의: 인디케이터에 대한 위협 인텔리전스를 조회합니다."""

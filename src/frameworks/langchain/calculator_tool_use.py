@@ -1,6 +1,6 @@
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, ToolMessage, AIMessage
+from src.common.llm import get_chat_model
 
 # Define tools using concise function definitions
 @tool
@@ -21,7 +21,7 @@ def add(x: float, y: float) -> float:
 tools = [multiply, exponentiate, add]
 
 # Initialize the LLM with GPT-4o and bind the tools
-llm = ChatOpenAI(model_name="gpt-4o", temperature=0)
+llm = get_chat_model("gpt-4o", temperature=0)
 llm_with_tools = llm.bind_tools(tools)
 
 query = "What is 393 * 12.25? Also, what is 11 + 49?"

@@ -1,12 +1,12 @@
 from typing import TypedDict, Annotated, Sequence
 import operator
 from langchain.tools import tool
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage, ToolMessage
 from langgraph.graph import StateGraph
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -38,7 +38,7 @@ def call_model(state):
     order = state.get("order", {"order_id": "UNKNOWN"})
 
     # LLM 초기화
-    llm = init_chat_model(model="gpt-5-mini", temperature=0)
+    llm = get_chat_model("gpt-5-mini", temperature=0)
     llm_with_tools = llm.bind_tools([cancel_order]) # 도구 바인딩
 
     # 시스템 프롬프트는 모델이 할 일을 정확히 알려줍니다

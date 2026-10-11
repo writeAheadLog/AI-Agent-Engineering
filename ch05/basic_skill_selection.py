@@ -2,11 +2,11 @@ import os
 import requests
 
 from langchain_core.tools import tool
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -89,7 +89,7 @@ def send_slack_message(channel: str, message: str) -> str:
         raise ValueError(f'''Slack 채널 "{channel}"로 메시지 전송에 실패했습니다: {e}''')
 
 # LLM 초기화
-llm = init_chat_model(model="gpt-4o-mini", temperature=0)
+llm = get_chat_model("gpt-4o-mini", temperature=0)
 tools_list = [send_slack_message, query_wolfram_alpha, trigger_zapier_webhook]
 tools_by_name = {t.name: t for t in tools_list}
 llm_with_tools = llm.bind_tools(tools_list)

@@ -30,6 +30,7 @@ from typing import Dict, List, Mapping, Optional
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
+from src.common.llm import get_chat_model
 
 # metric_name -> (rubric_prompt, requires_reference)
 DEFAULT_RUBRICS: Mapping[str, tuple[str, bool]] = {
@@ -64,7 +65,7 @@ class AIJudge:
 
     def __init__(self, *, llm: Optional[ChatOpenAI] = None,
                  rubrics: Optional[Mapping[str, tuple[str, bool]]] = None):
-        self.llm = llm or ChatOpenAI(model="gpt-4o", temperature=0.0)
+        self.llm = llm or get_chat_model("gpt-4o", temperature=0.0)
         self.rubrics: Dict[str, tuple[str, bool]] = dict(rubrics or DEFAULT_RUBRICS)
 
     def evaluate(self, prediction: str, reference: Optional[str] = None,

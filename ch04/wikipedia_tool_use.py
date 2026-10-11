@@ -1,10 +1,10 @@
-from langchain.chat_models import init_chat_model
 from langchain_community.tools import WikipediaQueryRun
 from langchain_community.utilities import WikipediaAPIWrapper
 from langchain_core.messages import HumanMessage
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -21,7 +21,7 @@ api_wrapper = WikipediaAPIWrapper(top_k_results=1, doc_content_chars_max=300)
 tool = WikipediaQueryRun(api_wrapper=api_wrapper)
 
 # LLM 초기화 및 도구 바인딩
-llm = init_chat_model(model="gpt-5-mini", temperature=0)
+llm = get_chat_model("gpt-5-mini", temperature=0)
 llm_with_tools = llm.bind_tools([tool])
 
 messages = [HumanMessage("Buzz Aldrin의 주요 업적은 무엇인가요?")]

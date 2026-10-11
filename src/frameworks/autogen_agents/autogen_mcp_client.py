@@ -16,6 +16,7 @@ from typing import List
 
 from langchain.tools import Tool
 from langchain_mcp_adapters.client import MultiServerMCPClient
+from src.common.llm import resolve_model
 
 from openai_autogen import (
     AIConfig,
@@ -72,7 +73,7 @@ async def main():
         )
 
     ai_config = AIConfig(
-        model="gpt-4o", 
+        model=resolve_model("gpt-4o"), 
         temperature=0.0, 
         openai_api_key=None
     )

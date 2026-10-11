@@ -3,6 +3,7 @@ import os
 import uuid
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from openai import OpenAI
+from src.common.llm import resolve_model
 
 # 환경변수 로드
 try:
@@ -78,7 +79,7 @@ class AgentHandler(BaseHTTPRequestHandler):
                 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 try:
                     llm_response = client.chat.completions.create(
-                        model="gpt-4o-mini",
+                        model=resolve_model("gpt-4o-mini"),
                         messages=[
                             {"role": "system", "content": "당신은 간결한 요약을 제공하는 유용한 어시스턴트입니다."},
                             {"role": "user", "content": f"다음 텍스트를 요약하세요:\n{text}"}

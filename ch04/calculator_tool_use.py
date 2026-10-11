@@ -1,9 +1,9 @@
 from langchain_core.tools import tool
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, ToolMessage, AIMessage
 
 # 환경변수 확인
 import os
+from src.common.llm import get_chat_model
 try:
     from dotenv import load_dotenv
     load_dotenv()
@@ -35,7 +35,7 @@ def add(x: float, y: float) -> float:
 tools = [multiply, exponentiate, add]
 
 # LLM 초기화 및 도구 바인딩
-llm = init_chat_model(model="gpt-5-mini", temperature=0)
+llm = get_chat_model("gpt-5-mini", temperature=0)
 llm_with_tools = llm.bind_tools(tools)
 
 query = "393 * 12.25는 얼마인가요? 그리고 11 + 49는요?"

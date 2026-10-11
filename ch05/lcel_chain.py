@@ -1,7 +1,7 @@
 from langchain_core.runnables import RunnableLambda
-from langchain.chat_models import init_chat_model
 from langchain_core.prompts import PromptTemplate
 import os
+from src.common.llm import get_chat_model
 
 # 환경 변수 로드
 try:
@@ -12,7 +12,7 @@ except ImportError:
 
 # 함숫값 또는 모델 호출을 Runnable로 감쌉니다
 # RunnableLambda는 callable을 직접 인자로 받습니다.
-llm_model = init_chat_model(model="gpt-5-mini", temperature=0)
+llm_model = get_chat_model("gpt-5-mini", temperature=0)
 llm = RunnableLambda(llm_model.invoke)
 
 prompt = RunnableLambda(lambda text: 

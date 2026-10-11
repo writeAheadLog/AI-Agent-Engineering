@@ -2,11 +2,11 @@ import os
 import requests
 import logging
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from langchain_community.vectorstores import FAISS
 import faiss
 import numpy as np
+from src.common.llm import get_chat_model, get_embeddings
 
 # 환경변수 확인
 try:
@@ -42,8 +42,8 @@ def query_wolfram_alpha(expression: str) -> str:
 
 
 # OpenAI 임베딩 및 LLM 초기화
-embeddings = OpenAIEmbeddings(openai_api_key=os.getenv("OPENAI_API_KEY"))
-llm = ChatOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+embeddings = get_embeddings()
+llm = get_chat_model("gpt-3.5-turbo", api_key=os.getenv("OPENAI_API_KEY"))
 
 # 도구 설명
 tool_descriptions = {

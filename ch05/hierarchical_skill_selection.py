@@ -3,8 +3,8 @@ import requests
 import logging
 import numpy as np
 from langchain_core.tools import tool
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
+from src.common.llm import get_chat_model
 
 # 환경변수 확인
 try:
@@ -20,7 +20,7 @@ if not os.getenv("OPENAI_API_KEY"):
     )
 
 # LLM 초기화
-llm = init_chat_model(model="gpt-5-mini", temperature=0)
+llm = get_chat_model("gpt-5-mini", temperature=0)
 
 # 도구 정의
 @tool 

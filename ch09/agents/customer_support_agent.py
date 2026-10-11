@@ -22,6 +22,7 @@ from traceloop.sdk import Traceloop
 from src.common.observability.loki_logger import log_to_loki
 
 import dotenv
+from src.common.llm import get_chat_model
 dotenv.load_dotenv()
 
 openai_api_key = os.getenv("OPENAI_API_KEY")
@@ -73,7 +74,7 @@ if os.getenv("TRACELOOP_API_KEY"):
 else:
     print("[INFO] Traceloop API key not found. Skipping telemetry initialization.")
 
-llm = ChatOpenAI(model="gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()],  
+llm = get_chat_model("gpt-4o", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()],  
     verbose=True).bind_tools(TOOLS)
 
 class AgentState(TypedDict):

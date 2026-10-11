@@ -2,15 +2,15 @@ import os
 import requests
 import logging
 from langchain_core.tools import tool
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
 from langchain.vectorstores import FAISS
 import faiss
 import numpy as np
+from src.common.llm import get_chat_model, get_embeddings
 
 # Initialize OpenAI embeddings and LLM
-embeddings = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
-llm = ChatOpenAI(api_key=OPENAI_API_KEY)
+embeddings = get_embeddings()
+llm = get_chat_model("gpt-3.5-turbo", api_key=OPENAI_API_KEY)
 
 # Tool descriptions
 tool_descriptions = {

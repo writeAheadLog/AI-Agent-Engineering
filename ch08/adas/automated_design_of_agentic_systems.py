@@ -14,6 +14,7 @@ import numpy as np
 import openai
 import pandas
 from tqdm import tqdm
+from src.common.llm import resolve_model
 
 # 환경변수
 try:
@@ -97,7 +98,7 @@ class LLMAgentBase:
     LLM 에이전트의 기본 클래스, 다양한 출력 형식을 위해 설정 가능합니다.
     """
     def __init__(self, output_fields: list, agent_name: str,
-                 role='helpful assistant', model='gpt-5-mini', temperature=0.5) -> None:
+                 role='helpful assistant', model=resolve_model('gpt-5-mini'), temperature=0.5) -> None:
         self.output_fields = output_fields
         self.agent_name = agent_name
         self.role = role
@@ -498,7 +499,7 @@ if __name__ == "__main__":
     parser.add_argument('--expr_name', type=str, default='adas')
     parser.add_argument('--n_generation', type=int, default=30)
     parser.add_argument('--debug_max', type=int, default=3)
-    parser.add_argument('--model', type=str, default='gpt-5-mini')
+    parser.add_argument('--model', type=str, default=resolve_model('gpt-5-mini'))
     parser.add_argument('--n_repeat', type=int, default=1)
     parser.add_argument('--multiprocessing', action='store_true')
     parser.add_argument('--max_workers', type=int, default=48)

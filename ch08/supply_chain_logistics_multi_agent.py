@@ -9,7 +9,6 @@ import json
 import operator
 from typing import Annotated, Sequence, TypedDict, Optional
 
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_core.messages.tool import ToolMessage
 from langchain_core.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -19,6 +18,7 @@ from langgraph.graph import StateGraph, END
 
 from traceloop.sdk import Traceloop
 from src.common.observability.loki_logger import log_to_loki
+from src.common.llm import get_chat_model
 
 # 환경변수
 try:
@@ -152,7 +152,7 @@ def handle_compliance(compliance_type: Optional[str] = None, **kwargs) -> str:
 
 SUPPLIER_TOOLS = [evaluate_suppliers, handle_compliance, send_logistics_response]
 
-llm = init_chat_model(model="gpt-5-mini", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
+llm = get_chat_model("gpt-5-mini", temperature=0.0, callbacks=[StreamingStdOutCallbackHandler()], verbose=True)
 
 # 전문화된 LLM에 도구 바인딩
 inventory_llm = llm.bind_tools(INVENTORY_TOOLS)

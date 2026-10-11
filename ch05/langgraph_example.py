@@ -1,7 +1,7 @@
 from typing import TypedDict, Annotated, Optional
 from langgraph.graph import StateGraph, START, END
-from langchain.chat_models import init_chat_model
 from langchain_core.messages import HumanMessage
+from src.common.llm import get_chat_model
 
 # 환경 변수 로드
 try:
@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 # LLM 초기화
-llm = init_chat_model(model="gpt-5-mini")
+llm = get_chat_model("gpt-5-mini")
 
 # State 정의
 class AgentState(TypedDict):
