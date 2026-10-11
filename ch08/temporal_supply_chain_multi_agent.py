@@ -341,7 +341,11 @@ async def main():
                 "langchain_core", 
                 "langchain_community", 
                 "langchain_openai",
-                "pydantic", 
+                # 모듈 최상단에서 LLM 클라이언트를 생성하므로, 샌드박스가 재임포트하면
+                # httpx가 제한된 urllib.request를 건드려 워크플로 검증이 실패합니다.
+                "openai",
+                "httpx",
+                "pydantic",
                 "requests", 
                 "urllib3", 
                 "http",
