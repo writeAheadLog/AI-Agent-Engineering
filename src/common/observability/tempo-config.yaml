@@ -4,14 +4,24 @@
 #   • Disables write-ahead log (WAL) entirely
 #   • Disables compaction (so you don’t need to configure an object store)
 #   • Uses local filesystem for traces under /tempo-data/traces
-#   • Starts an OTLP/GPT receiver on port 4317 and an HTTP “query” API on port 9095.
+#   • Receives OTLP on 4317 (gRPC) and 4318 (HTTP); serves the query API on 3200.
 
 server:
-  # Tempo HTTP “query” endpoint (for Grafana) and OTLP/GRPC receiver
+  # Tempo HTTP “query” endpoint (for Grafana)
   http_listen_address:  0.0.0.0
   http_listen_port:     3200
+  # Internal gRPC port; kept off 4317/4318 so the OTLP receivers can bind them.
   grpc_listen_address: 0.0.0.0
-  grpc_listen_port: 4318
+  grpc_listen_port: 9095
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
 
 ingester:
   # In‐memory ring (single‐node demo). No WAL section here.

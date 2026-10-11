@@ -11,7 +11,7 @@ provider = TracerProvider(resource=resource)
 trace.set_tracer_provider(provider)
 
 otlp_exporter = OTLPSpanExporter(
-    endpoint="http://localhost:3200",
+    endpoint="localhost:4317",
     insecure=True,
 )
 span_processor = BatchSpanProcessor(otlp_exporter)
